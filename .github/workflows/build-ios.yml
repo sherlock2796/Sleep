@@ -1,0 +1,55 @@
+name: Build iOS
+
+on:
+  push:
+    paths-ignore:
+      - "**.md"
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-15
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Versione Xcode
+        run: xcodebuild -version
+
+      - name: Installa XcodeGen
+        run: brew install xcodegen
+
+      - name: Genera progetto Xcode
+        run: xcodegen generate
+
+      - name: Compila
+        run: |
+          set -o pipefail
+          xcodebuild build \
+            -project Sleep.xcodeproj \
+            -scheme Sleep \
+            -configuration Release \
+            -sdk iphoneos \
+            -destination 'generic/platform=iOS' \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY="" \
+            CURRENT_PROJECT_VERSION=${{ github.run_number }}
+
+      # Firma provvisoria con i permessi (es. HealthKit): Sideloadly/AltStore
+      # la sostituiscono con la firma del tuo ID Apple mantenendo i permessi.
+      - name: Crea file .ipa
+        run: |
+          mkdir -p Payload
+          cp -R build/Build/Products/Release-iphoneos/Sleep.app Payload/
+          codesign --force --sign - --timestamp=none \
+            --entitlements Sleep/Sleep.entitlements Payload/Sleep.app
+          codesign -d --entitlements - Payload/Sleep.app
+          zip -qry Sleep.ipa Payload
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Sleep-build-${{ github.run_number }}
+          path: Sleep.ipa
+          retention-days: 30

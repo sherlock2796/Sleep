@@ -1,0 +1,40 @@
+# Definizione del progetto Xcode, generato con XcodeGen (`xcodegen generate`).
+name: Sleep
+options:
+  bundleIdPrefix: com.sherlock2796
+  deploymentTarget:
+    iOS: "17.0"
+settings:
+  base:
+    MARKETING_VERSION: "0.1.0"
+    CURRENT_PROJECT_VERSION: "1"
+    SWIFT_VERSION: "5.0"
+targets:
+  Sleep:
+    type: application
+    platform: iOS
+    sources:
+      - path: Sleep
+    scheme: {}
+    info:
+      path: Sleep/Info.plist
+      properties:
+        CFBundleDisplayName: Sleep
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        UILaunchScreen: {}
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+        UIBackgroundModes:
+          - audio
+        NSMicrophoneUsageDescription: Sleep usa il microfono durante la notte per rilevare russamento, parlato e rumori.
+        NSHealthShareUsageDescription: Sleep legge le fasi del sonno e il battito registrati dall'Apple Watch per mostrarti le statistiche delle tue notti.
+    entitlements:
+      path: Sleep/Sleep.entitlements
+      properties:
+        com.apple.developer.healthkit: true
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.sherlock2796.Sleep
+        TARGETED_DEVICE_FAMILY: "1"
+        CODE_SIGN_STYLE: Automatic

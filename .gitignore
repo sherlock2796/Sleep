@@ -1,0 +1,11 @@
+# Generati da XcodeGen
+*.xcodeproj
+Sleep/Info.plist
+Sleep/Sleep.entitlements
+
+# Compilazione
+build/
+DerivedData/
+Payload/
+*.ipa
+.DS_Store
